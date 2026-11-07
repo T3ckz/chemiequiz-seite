@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Anmeldung · ChemieQuiz</title>
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+<main>
+  <header><a href="./">Chemie<span>Quiz</span></a></header>
+  <h1 id="titel">Anmeldung zurück</h1>
+  <p id="text">Kopiere diese Adresse und füge sie auf der Konten-Seite der Quiz-Fabrik ein.
+     Der Code darin gilt nur wenige Minuten.</p>
+  <div class="karte">
+    <code id="adresse"></code>
+    <button id="kopieren" type="button">Adresse kopieren</button>
+    <span id="ok" class="leise"></span>
+  </div>
+  <p class="leise">Diese Seite speichert nichts und sendet nichts weiter. Der Code wird nur in deinem Browser angezeigt.</p>
+</main>
+<script>
+  // Nur anzeigen, nichts senden. Der Code geht ausschließlich per Kopieren an die eigene Quiz-Fabrik.
+  const adresse = location.href;
+  const q = new URLSearchParams(location.search);
+  document.getElementById("adresse").textContent = adresse;
+  if (q.get("error")) {
+    document.getElementById("titel").textContent = "Anmeldung abgebrochen";
+    document.getElementById("text").textContent = "Die Plattform meldet: " + (q.get("error_description") || q.get("error"));
+  } else if (!q.get("code")) {
+    document.getElementById("text").textContent = "In dieser Adresse steht kein Anmelde-Code.";
+  }
+  document.getElementById("kopieren").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(adresse); document.getElementById("ok").textContent = " Kopiert."; }
+    catch (e) { getSelection().selectAllChildren(document.getElementById("adresse")); }
+  });
+</script>
+</body>
+</html>
